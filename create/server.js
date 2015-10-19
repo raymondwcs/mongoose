@@ -1,12 +1,9 @@
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
-var kittySchema = mongoose.Schema({
-	name: String,
-	age: Number
-});
-
+var kittySchema = require('./models/kitty');
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
 	var Kitten = mongoose.model('Kitten', kittySchema);
