@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
-var kittySchema = require('./models/kitty.js');
+var kittySchema = require('./models/kitty');
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
