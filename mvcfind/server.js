@@ -10,7 +10,7 @@ var db = mongoose.connection;
 // View
 function renderResult(res,kitties) {
 	res.writeHead(200, {"Content-Type": "text/html"});
-	res.write('<body>');
+	res.write('<html><body>');
 	res.write('<H2>Details of all Kitties:</H2>');
 	res.write('<ol>');
 	for (var i = 0; i < kitties.length; i++) {
