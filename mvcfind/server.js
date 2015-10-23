@@ -19,7 +19,6 @@ function renderResult(res,kitties) {
 	res.write('</ol>');
 	res.write('</H2>');
 	res.write('</body></html>');
-	res.end();
 }
 
 // Controller
@@ -52,6 +51,7 @@ var server = http.createServer(function (req,res) {
 				}
 				db.close();
 				renderResult(res,kitties);
+				res.end();
 			})
 		});
 	}
