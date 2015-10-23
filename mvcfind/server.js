@@ -15,7 +15,7 @@ function renderResult(res,kitties) {
 	res.write('<ol>');
 	for (var i = 0; i < kitties.length; i++) {
 		res.write('<li>');
-		res.write('Name = ' + kitties[i].name + '\tAge = ' + kitties[i].age);
+		res.write(JSON.stringify(kitties[i]));
 		res.write('</li>')
 	}
 	res.write('</ol>');
