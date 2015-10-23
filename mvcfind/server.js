@@ -14,7 +14,9 @@ function renderResult(res,kitties) {
 	res.write('<H2>Details of all Kitties:</H2>');
 	res.write('<ol>');
 	for (var i = 0; i < kitties.length; i++) {
-		res.write('<li>' + JSON.stringify(kitties[i]) + '</li>')
+		res.write('<li>');
+		res.write('Name = ' + kitties[i].name + '\tAge = ' + kitties[i].age);
+		res.write('</li>')
 	}
 	res.write('</ol>');
 	res.write('</H2>');
@@ -45,12 +47,8 @@ var server = http.createServer(function (req,res) {
 			var Kitten = mongoose.model('Kitten', kittySchema);
 			Kitten.find({},fields,function(err,results) {
 				assert.equal(err,null);
-				var kitties = [];
-				for(var i = 0; i < results.length; i++) {
-						kitties.push(results[i]);
-				}
 				db.close();
-				renderResult(res,kitties);
+				renderResult(res,results);
 				res.end();
 			})
 		});
