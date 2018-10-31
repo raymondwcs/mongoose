@@ -1,5 +1,5 @@
 # ODM CRUD Example - Create Documents
-This program creates a document through ODM.  A document will be created in a collection named `Kittens`.
+This example creates a document through ODM.  A document will be created in a collection named `Kittens`.
 
 The schema definition is stored in the `models` folder.
 
