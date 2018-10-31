@@ -1,4 +1,4 @@
-# ODM Example - Find Documents
+# ODM CRUD Example - Find (Read) Documents
 This program finds documents in a collection named `Kittens` through ODM. 
 
 The schema definition is stored in the `models` folder.
