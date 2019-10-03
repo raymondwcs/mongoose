@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('',
+				 {useMongoClient: true,}
+);
 
 var kittySchema = require('./models/kitty');
 var db = mongoose.connection;

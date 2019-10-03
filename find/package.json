@@ -4,9 +4,10 @@
     "author": "Raymond SO <rso@ouhk.edu.hk>",
     "version": "0.0.1",
     "dependencies": {
-        "mongoose": "~4.0.0"
+        "mongoose": "^4.10.8"
     },
     "engine": "node >= 0.10.0",
-    "scripts": {"start": "node server"}
+    "scripts": {
+        "start": "node server"
+    }
 }
-
