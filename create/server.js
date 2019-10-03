@@ -1,16 +1,16 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.connect('mongodb://',
 				 {useMongoClient: true,}
 );
-var kittySchema = require('./models/kitty');
-var db = mongoose.connection;
+const kittySchema = require('./models/kitty');
+const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-	var Kitten = mongoose.model('Kitten', kittySchema);
-	var fluffy = new Kitten({name: 'fluffy', age: 0});
+db.once('open', (callback) => {
+	let Kitten = mongoose.model('Kitten', kittySchema);
+	let fluffy = new Kitten({name: 'fluffy', age: 0});
 
-	fluffy.save(function(err) {
+	fluffy.save((err) => {
 		if (err) throw err
 		console.log('Kitten created!')
 		db.close();

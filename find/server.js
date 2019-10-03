@@ -1,16 +1,16 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.connect('mongodb://',
 				 {useMongoClient: true,}
 );
 
-var kittySchema = require('./models/kitty');
-var db = mongoose.connection;
+const kittySchema = require('./models/kitty');
+const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-	var Kitten = mongoose.model('Kitten', kittySchema);
+	let Kitten = mongoose.model('Kitten', kittySchema);
 
-	Kitten.find({name: /^flu/}, function(err,results) {
+	Kitten.find({name: /^flu/}, (err,results) => {
 		if (err) return console.error(err);
 		console.log(results);
 		db.close();
