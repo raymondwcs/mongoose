@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://',
+mongoose.connect('',
 				 {useMongoClient: true,}
 );
 
