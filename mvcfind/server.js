@@ -1,14 +1,11 @@
-var http = require('http');
-var url = require('url');
-var mongoose = require('mongoose');
-var assert = require('assert');
-var MONGODBURL = 'mongodb://localhost/test';
-
-var kittySchema = require('./models/kitty');
-var db = mongoose.connection;
+const http = require('http');
+const url = require('url');
+const mongoose = require('mongoose');
+const assert = require('assert');
+const kittySchema = require('./models/kitty');
 
 // View
-function renderResult(res,kitties) {
+const renderResult = (res,kitties) => {
 	res.writeHead(200, {"Content-Type": "text/html"});
 	res.write('<html><body>');
 	res.write('<H2>Details of all Kitties:</H2>');
@@ -24,27 +21,26 @@ function renderResult(res,kitties) {
 }
 
 // Controller
-function filterResult(id) {
+const filterResult = (id) => {
 	fields = (id == "admin") ? "name age -_id" : "name -_id";
 	return(fields);
 }
 
-var server = http.createServer(function (req,res) {
-	response = res;
-	var today = new Date();
+const server = http.createServer((req,res) => {
+	let timestamp = new Date().toISOString();
+	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
 
-	console.log(today.toTimeString() + " " +
-	            "INCOMING REQUEST: " + req.connection.remoteAddress + " " +
-	            req.method + " " + req.url);
-
-	var parsedURL = url.parse(req.url,true);  //true to get query as object
-	var queryAsObject = parsedURL.query;
+	var parsedURL = url.parse(req.url,true); // true to get query as object 
 
 	if (parsedURL.pathname == '/show') {
-		var fields = filterResult(queryAsObject.id);
-		mongoose.connect(MONGODBURL, function(err) {
-			assert.equal(err,null);
-			var Kitten = mongoose.model('Kitten', kittySchema);
+		var fields = filterResult(parsedURL.query.id);
+		const db = mongoose.connection;
+		mongoose.connect('mongodb://',
+			{useMongoClient: true}
+		);
+		db.on('error', console.error.bind(console, 'connection error:'));
+		db.once('open',()=> {
+			const Kitten = mongoose.model('Kitten', kittySchema);
 			Kitten.find({},fields,function(err,results) {
 				assert.equal(err,null);
 				db.close();
