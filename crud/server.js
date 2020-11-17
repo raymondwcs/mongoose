@@ -3,7 +3,7 @@ const assert = require('assert');
 const http = require('http');
 const url = require('url');
 
-const mongourl = 'mongodb://rso:student@cluster0-shard-00-00.o4sc9.mongodb.net:27017,cluster0-shard-00-01.o4sc9.mongodb.net:27017,cluster0-shard-00-02.o4sc9.mongodb.net:27017/test?ssl=true&replicaSet=atlas-ibh7t4-shard-0&authSource=admin&retryWrites=true&w=majority';
+const mongourl = '';
 const mongoose = require('mongoose');
 
 const contactSchema = mongoose.Schema({ 
