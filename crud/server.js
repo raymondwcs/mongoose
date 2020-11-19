@@ -30,6 +30,7 @@ const create = () => {
             if (err) throw err;
             console.log('Contact created!');
             db.close();
+            read();
         })
     })
 }
@@ -69,6 +70,7 @@ const update = () => {
                 if (err) throw err
                 console.log('Contact updated!');
                 db.close();
+                read();
             })
         })
     })
@@ -85,6 +87,7 @@ const del = () => {
         Contact.deleteMany({name: 'Raymond'}, (err) => {
             if (err) throw err;
             db.close();
+            read();
         })
     })
 }
