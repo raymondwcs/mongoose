@@ -1,1 +1,1 @@
-# Examples of using Mongoose (ODM) to perform CRUD operations
+# Use Mongoose (ODM) to perform CRUD operations
