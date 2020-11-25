@@ -3,14 +3,15 @@ const assert = require('assert');
 const http = require('http');
 const url = require('url');
 
-const mongourl = '';
+const mongourl = 'mongodb://rso:student@cluster0-shard-00-00.o4sc9.mongodb.net:27017,cluster0-shard-00-01.o4sc9.mongodb.net:27017,cluster0-shard-00-02.o4sc9.mongodb.net:27017/test?ssl=true&replicaSet=atlas-ibh7t4-shard-0&authSource=admin&retryWrites=true&w=majority';
 const mongoose = require('mongoose');
 
 const contactSchema = mongoose.Schema({ 
-    name: {type: String, required: true},
+    name: {type: String, required: true, minlength: 1, maxlength: 20},
+    birthyear: {type: Number, min: 1900, max: 2100},
     phone: [{
-        type: {type: String, enum: ['office','home','mobile']},
-        number: {type: String}
+        type: {type: String, enum: ['office','home','mobile'], default: 'mobile', required: true},
+        number: {type: String, required: true}
     }],
     email: String
 });
@@ -43,7 +44,9 @@ const read = () => {
     db.once('open', () => {
         const Contact = mongoose.model('contact', contactSchema);
 
-        Contact.find({name: 'Raymond'}, (err, results) => {
+        const criteria = {name: 'Raymond'};
+        Contact.find(criteria, (err, results) => {
+            console.log(`# documents meeting the criteria ${JSON.stringify(criteria)}: ${results.length}`);
             for (var doc of results) {
                 console.log(doc.name);
                 for (phone of doc.phone) {
@@ -91,3 +94,5 @@ const del = () => {
         })
     })
 }
+
+del();
