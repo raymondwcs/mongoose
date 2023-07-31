@@ -1,6 +1,7 @@
 const dbName = 'test'
-const mongourl = ``;
+const mongouri = 'mongodb://172.17.0.2/test';
 const mongoose = require('mongoose');
+const async = require("async");
 
 const contactSchema = mongoose.Schema({
     name: { type: String, required: true, minlength: 1, maxlength: 20 },
@@ -12,50 +13,28 @@ const contactSchema = mongoose.Schema({
     email: String
 });
 
-const create = () => {
-    mongoose.connect(mongourl, { useNewUrlParser: true, useUnifiedTopology: true });
-    const db = mongoose.connection;
+const create = async () => {
+    await mongoose.connect(mongouri);
 
-    db.on('error', console.error.bind(console, 'connection error'));
-    db.once('open', () => {
-        const Contact = mongoose.model('contact', contactSchema);
+    // create a contact
+    const Contact = mongoose.model('contact', contactSchema);
+    const raymond = new Contact({ name: 'Raymond', phone: [{ type: 'mobile', number: '12345678' }] });
+    await raymond.save();
 
-        // create a contact
-        const raymond = new Contact({ name: 'Raymond', phone: [{ type: 'mobile', number: '12345678' }] });
-
-        raymond.save((err) => {
-            if (err) throw err;
-            console.log('Contact created!');
-            db.close();
-            read();
-        })
-    })
+    return raymond;
 }
 
-const read = () => {
-    mongoose.connect(mongourl, { useNewUrlParser: true, useUnifiedTopology: true });
-    const db = mongoose.connection;
+const read = async () => {
+    await mongoose.connect(mongouri);
 
-    db.on('error', console.error.bind(console, 'connection error'));
-    db.once('open', () => {
-        const Contact = mongoose.model('contact', contactSchema);
+    const Contact = mongoose.model('contact', contactSchema);
+    const contacts = await Contact.find();
 
-        const criteria = { name: 'Raymond' };
-        Contact.find(criteria, (err, results) => {
-            console.log(`# documents meeting the criteria ${JSON.stringify(criteria)}: ${results.length}`);
-            for (var doc of results) {
-                console.log(doc.name);
-                for (phone of doc.phone) {
-                    console.log(`type: ${phone.type} - ${phone.number}`)
-                }
-            }
-            db.close();
-        })
-    })
+    return contacts;
 }
 
 const update = () => {
-    mongoose.connect(mongourl, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoose.connect(mongouri, { useNewUrlParser: true, useUnifiedTopology: true });
     const db = mongoose.connection;
 
     db.on('error', console.error.bind(console, 'connection error'));
@@ -75,20 +54,22 @@ const update = () => {
     })
 }
 
-const del = () => {
-    mongoose.connect(mongourl, { useNewUrlParser: true, useUnifiedTopology: true });
-    const db = mongoose.connection;
+const del = async () => {
+    await mongoose.connect(mongouri);
 
-    db.on('error', console.error.bind(console, 'connection error'));
-    db.once('open', () => {
-        const Contact = mongoose.model('contact', contactSchema);
+    const Contact = mongoose.model('contact', contactSchema);
+    const contacts = await Contact.deleteMany({});
 
-        Contact.deleteMany({ name: 'Raymond' }, (err) => {
-            if (err) throw err;
-            db.close();
-            read();
-        })
-    })
+    return 0;
 }
 
-create()
+create().then(() => {
+    console.log('created one document');
+    read().then((contacts) => {
+        console.log(contacts);
+        del().then(() => {
+            console.log('deleted all documents');
+            mongoose.disconnect();
+        });
+    })
+});
