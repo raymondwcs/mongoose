@@ -1,5 +1,5 @@
 # Mongoose CRUD operations
-This example demonstrates the use of ODM ([Mongooese v4](https://mongoosejs.com)).
+This example demonstrates the use of ODM ([Mongooese v7](https://mongoosejs.com)).
 
 
 

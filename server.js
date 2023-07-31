@@ -21,14 +21,14 @@ const create = async () => {
     // create a contact
     const Contact = mongoose.model('contact', contactSchema);
     const raymond = new Contact({ name: 'Raymond', phone: [{ type: 'mobile', number: '12345678' }] });
-    await raymond.save();
+    const results = await raymond.save();
 
-    return raymond;
+    return results;
 }
 
 const read = async () => {
     const Contact = mongoose.model('contact', contactSchema);
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ name: 'Raymond' });
 
     return contacts;
 }
@@ -42,17 +42,17 @@ const update = async () => {
 }
 
 const del = async () => {
-    // await mongoose.connect(mongouri);
-
     const Contact = mongoose.model('contact', contactSchema);
     const results = await Contact.deleteMany({});
     return results;
 }
 
 create().then((results) => {
-    console.log('created 1 document');
-    read().then((contacts) => {
-        console.log(util.inspect(contacts, { showHidden: true, depth: null, colors: true }));
+    console.log('created 1 document:')
+    console.log(util.inspect(results, { showHidden: true, depth: null, colors: true }));
+    read().then((results) => {
+        console.log(`read ${results.length} document(s):`)
+        console.log(util.inspect(results, { showHidden: true, depth: null, colors: true }));
         update().then(results => {
             console.log('document updated:');
             console.log(util.inspect(results, { showHidden: true, depth: null, colors: true }));
