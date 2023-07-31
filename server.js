@@ -1,7 +1,9 @@
-const dbName = 'test'
-const mongouri = 'mongodb://172.17.0.2/test';
-const mongoose = require('mongoose');
 const async = require("async");
+const util = require('util');
+const mongoose = require('mongoose');
+const dbName = 'test'
+const mongouri = `mongodb://172.17.0.3/${dbName}`;
+
 
 const contactSchema = mongoose.Schema({
     name: { type: String, required: true, minlength: 1, maxlength: 20 },
@@ -25,51 +27,39 @@ const create = async () => {
 }
 
 const read = async () => {
-    await mongoose.connect(mongouri);
-
     const Contact = mongoose.model('contact', contactSchema);
     const contacts = await Contact.find();
 
     return contacts;
 }
 
-const update = () => {
-    mongoose.connect(mongouri, { useNewUrlParser: true, useUnifiedTopology: true });
-    const db = mongoose.connection;
-
-    db.on('error', console.error.bind(console, 'connection error'));
-    db.once('open', () => {
-        const Contact = mongoose.model('contact', contactSchema);
-
-        Contact.findOne({ name: 'Raymond' }, (err, results) => {
-            // change phone number
-            results.phone[0].number = '19971997';
-            results.save((err) => {
-                if (err) throw err
-                console.log('Contact updated!');
-                db.close();
-                read();
-            })
-        })
-    })
+const update = async () => {
+    const Contact = mongoose.model('contact', contactSchema);
+    let raymond = await Contact.findOne({ name: 'Raymond' });
+    raymond.phone[0].number = '19971997';
+    await raymond.save();
+    return raymond;
 }
 
 const del = async () => {
-    await mongoose.connect(mongouri);
+    // await mongoose.connect(mongouri);
 
     const Contact = mongoose.model('contact', contactSchema);
-    const contacts = await Contact.deleteMany({});
-
-    return 0;
+    const results = await Contact.deleteMany({});
+    return results;
 }
 
-create().then(() => {
-    console.log('created one document');
+create().then((results) => {
+    console.log('created 1 document');
     read().then((contacts) => {
-        console.log(contacts);
-        del().then(() => {
-            console.log('deleted all documents');
-            mongoose.disconnect();
-        });
+        console.log(util.inspect(contacts, { showHidden: true, depth: null, colors: true }));
+        update().then(results => {
+            console.log('document updated:');
+            console.log(util.inspect(results, { showHidden: true, depth: null, colors: true }));
+            del().then((results) => {
+                console.log(`deleted ${results['deletedCount']} document(s)`);
+                mongoose.disconnect();
+            });
+        })
     })
-});
+}).catch(err => console.log(err));
