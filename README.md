@@ -38,10 +38,10 @@ docker inspect mongo | grep IP
 6. Write down the full path of the folder that contains `server.js`.
 7. Start Nodejs
 ```
-docker run -itd -v <folder>:/<folder> --name node node
+docker run -itd -v <folder>:/mongoose --name node node
 ```
 Replace `<folder>` with what you've written down in the previous step.
 7. Run the example
 ```
-docker exec -it node node /<folder>/server.js
+docker exec -it node node /mongoose/server.js
 ```
